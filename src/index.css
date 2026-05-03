@@ -430,13 +430,13 @@ input, textarea, select { font-family: inherit; outline: none; }
 .services-carousel-scroll {
   display: flex;
   overflow-x: auto;
-  padding: 80px 0;
-  gap: 30px;
+  padding: 40px 0;
+  gap: 20px;
   scroll-behavior: smooth;
   scroll-snap-type: x mandatory;
   -ms-overflow-style: none;
-  margin-top: -80px;
-  padding-bottom: 200px; 
+  scrollbar-width: none;
+  perspective: 1200px;
 }
 .services-carousel-scroll::-webkit-scrollbar {
   display: none;
@@ -458,7 +458,9 @@ input, textarea, select { font-family: inherit; outline: none; }
 .service-card {
   padding: 40px 32px; border-radius: 20px;
   background: linear-gradient(145deg, rgba(255,255,255,0.06), rgba(255,255,255,0.01));
-  backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  @media (min-width: 768px) {
+    backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  }
   border: 1px solid rgba(255,255,255,0.08);
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative; overflow: hidden;
@@ -558,8 +560,10 @@ input, textarea, select { font-family: inherit; outline: none; }
   position: relative; padding: 44px 32px 36px;
   border-radius: 22px; overflow: hidden;
   background: rgba(255, 255, 255, 0.03);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  @media (min-width: 768px) {
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
   border: 1px solid rgba(255, 255, 255, 0.07);
   transition: all 0.45s cubic-bezier(0.4, 0, 0.2, 1);
   text-align: center;
@@ -653,8 +657,10 @@ input, textarea, select { font-family: inherit; outline: none; }
 .project-card {
   border-radius: 20px; overflow: hidden;
   background: rgba(255, 255, 255, 0.03);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  @media (min-width: 768px) {
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
   border: 1px solid rgba(255, 255, 255, 0.06);
   transition: all 0.45s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -1240,15 +1246,17 @@ input, textarea, select { font-family: inherit; outline: none; }
   .menu-toggle { display: flex; z-index: 1001; }
   .hero { min-height: auto; padding-top: 140px; }
   .hero-bg-image { width: 120vw; opacity: 0.15; animation: none; } /* Disable logo animation on mobile */
-  .glass-panel { padding: 40px 20px; border-radius: 24px; backdrop-filter: blur(5px) saturate(130%); -webkit-backdrop-filter: blur(5px) saturate(130%); }
-  .hero-bg-orb { animation: none; opacity: 0.1; filter: blur(40px); } /* Simplify orbs on mobile */
+  .glass-panel { padding: 40px 20px; border-radius: 24px; backdrop-filter: none; background: rgba(25, 25, 35, 0.9); } /* Disable blur for extreme performance */
+  .hero-bg-orb { display: none; } /* Remove orbs on mobile */
   .hero p { font-size: 1rem; }
   .stats-bar { gap: 12px; padding: 40px 20px; }
   .stat { padding: 15px 20px; min-width: 140px; }
   .stat-number { font-size: 1.8rem; }
   .projects-grid { grid-template-columns: 1fr; gap: 20px; }
-  .service-carousel-item { flex: 0 0 220px; height: 320px; transition: transform 0.4s ease-out; } /* Faster, simpler transition for mobile */
+  .service-carousel-item { flex: 0 0 220px; height: 320px; transition: transform 0.4s ease-out; } 
   .services-carousel-spacer { flex: 0 0 calc(50vw - 110px - 10px); }
+  .service-card { backdrop-filter: none; background: rgba(255, 255, 255, 0.05); } /* Faster mobile cards */
+  .about-card, .project-card { backdrop-filter: none; background: rgba(255, 255, 255, 0.05); } /* Faster mobile cards */
   .about-grid { grid-template-columns: 1fr; gap: 20px; }
   .about-grid > :last-child { max-width: 100%; }
   .form-row { grid-template-columns: 1fr; }

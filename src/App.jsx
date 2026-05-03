@@ -349,7 +349,7 @@ function Services() {
   }, [])
 
   return (
-    <section className="section section-alt" id="services" style={{ overflow: 'hidden', position: 'relative' }}>
+    <section className="section section-alt" id="services" style={{ position: 'relative' }}>
       <div className="services-corner-glows" />
       <Reveal>
         <div className="section-header">
