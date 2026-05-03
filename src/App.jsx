@@ -290,29 +290,37 @@ function Services() {
     let ticking = false
 
     const updateCards = () => {
-      const centerX = el.scrollLeft + el.clientWidth / 2
+      const el = scrollRef.current
+      if (!el) return
       
-      cardsRef.current.forEach((card) => {
+      const scrollLeft = el.scrollLeft
+      const viewportWidth = el.clientWidth
+      
+      // Fixed width assumptions to avoid layout thrashing
+      const cardWidth = 400 
+      const gap = 30 // Approximate gap
+
+      cardsRef.current.forEach((card, i) => {
         if (!card) return
-        const cardCenter = card.offsetLeft + card.clientWidth / 2
-        const dist = cardCenter - centerX
         
-        const maxDist = el.clientWidth / 2
+        // Calculate distance relative to scroll center without reading from DOM
+        const cardPos = (viewportWidth / 2) + (i * (cardWidth + gap)) - scrollLeft
+        const dist = cardPos - (viewportWidth / 2)
+        
+        const maxDist = viewportWidth / 1.5
         let normalizedDist = dist / maxDist
-        normalizedDist = Math.max(-1.5, Math.min(1.5, normalizedDist))
+        normalizedDist = Math.max(-1, Math.min(1, normalizedDist))
         
-        // Relaxed angles slightly for better text legibility and size
-        const rotateY = normalizedDist * -45 
-        const translateZ = Math.abs(normalizedDist) * -350
-        const translateX = normalizedDist * -80 
-        const scale = 1 - Math.abs(normalizedDist) * 0.1
-        const opacity = 1 - Math.abs(normalizedDist) * 0.4
+        const rotateY = normalizedDist * -35 
+        const translateZ = Math.abs(normalizedDist) * -200
+        const translateX = normalizedDist * -50 
+        const scale = 1 - Math.abs(normalizedDist) * 0.15
+        const opacity = 1 - Math.abs(normalizedDist) * 0.6
         
-        card.style.transform = `translateZ(${translateZ}px) translateX(${translateX}px) rotateY(${rotateY}deg) scale(${scale})`
-        card.style.opacity = Math.max(0, opacity).toFixed(3)
+        card.style.transform = `translate3d(${translateX}px, 0, ${translateZ}px) rotateY(${rotateY}deg) scale(${scale})`
+        card.style.opacity = Math.max(0, opacity).toFixed(2)
         
-        // Add focused class for vibrant CSS styling on the center card
-        if (Math.abs(normalizedDist) < 0.15) {
+        if (Math.abs(normalizedDist) < 0.2) {
           card.classList.add('focused')
         } else {
           card.classList.remove('focused')
@@ -380,7 +388,7 @@ function Services() {
 /* ══════════════════════ ABOUT ══════════════════════ */
 const aboutCards = [
   { icon: '🎯', title: 'Our Mission', desc: 'To empower businesses with innovative technology solutions that drive growth, efficiency, and meaningful user engagement.', accent: 'purple' },
-  { icon: '👁️', title: 'Our Vision', desc: 'To become a leading digital innovation studio recognized for delivering world-class products with integrity and excellence.', accent: 'teal' },
+  { icon: '🚀', title: 'Our Vision', desc: 'To become a leading digital innovation studio recognized for delivering world-class products with integrity and excellence.', accent: 'teal' },
   { icon: '💡', title: 'Our Values', desc: 'Innovation, transparency, collaboration, and relentless pursuit of quality define everything we do at RI MERGE.', accent: 'pink' },
 ]
 
@@ -390,7 +398,7 @@ function About() {
       <div className="about-bg-mesh" />
       <Reveal>
         <div className="section-header">
-          <span className="section-label">Who We Are</span>
+          <span className="section-label">We Are</span>
           <h2 className="section-title">About <span className="gradient-text">RI MERGE</span></h2>
           <p className="section-desc">We are a team of passionate developers, designers, and strategists committed to transforming ideas into impactful digital products.</p>
         </div>
