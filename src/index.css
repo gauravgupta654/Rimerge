@@ -2479,7 +2479,7 @@ select {
 
   .service-card {
     backdrop-filter: none;
-    background: rgba(255, 255, 255, 0.05);
+    background: var(--theme-hex, #0f0f13);
   }
 
   /* Faster mobile cards */
@@ -2747,6 +2747,8 @@ select {
 
 @media (max-width: 768px) {
   .scroll-stack-bg-text {
-    font-size: 32vw;
+    font-size: 16vw;
+    line-height: 1;
+    letter-spacing: -0.02em;
   }
 }

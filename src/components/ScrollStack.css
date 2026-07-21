@@ -42,7 +42,7 @@
 /* Mobile Responsiveness */
 @media (max-width: 768px) {
   .scroll-stack-inner {
-    padding: 10px 0 30vh;
+    padding: 10px 0 0;
   }
 
   .scroll-stack-card {

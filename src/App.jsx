@@ -1,6 +1,19 @@
 import { useState, useEffect, useRef } from 'react'
 import Hyperspeed from './components/Hyperspeed'
 import ScrollStack, { ScrollStackItem } from './components/ScrollStack'
+
+export function useMediaQuery(query) {
+  const [matches, setMatches] = useState(false)
+  useEffect(() => {
+    const media = window.matchMedia(query)
+    if (media.matches !== matches) setMatches(media.matches)
+    const listener = () => setMatches(media.matches)
+    window.addEventListener('resize', listener)
+    return () => window.removeEventListener('resize', listener)
+  }, [matches, query])
+  return matches
+}
+
 /* ══════════════════════ NAVBAR ══════════════════════ */
 function Navbar() {
   const [scrolled, setScrolled] = useState(false)
@@ -286,6 +299,8 @@ const services = [
 ]
 
 function Services() {
+  const isMobile = useMediaQuery('(max-width: 768px)')
+
   return (
     <section className="section section-alt" id="services" style={{ position: 'relative', overflow: 'clip' }}>
       <div className="services-corner-glows" />
@@ -297,7 +312,7 @@ function Services() {
         </div>
       </Reveal>
       
-      <div style={{ marginTop: '45vh', position: 'relative' }}>
+      <div style={{ marginTop: isMobile ? '20vh' : '45vh', position: 'relative' }}>
         <div style={{ position: 'sticky', top: '50%', transform: 'translateY(-50%)', zIndex: 0, display: 'flex', justifyContent: 'center', pointerEvents: 'none', height: 0, overflow: 'visible', alignItems: 'center' }}>
           <div className="scroll-stack-bg-text">
             <div>ALL ON</div>
@@ -306,7 +321,13 @@ function Services() {
         </div>
         
         <div style={{ position: 'relative', zIndex: 1 }}>
-          <ScrollStack useWindowScroll={true} itemDistance={60} itemStackDistance={15} stackPosition="40%" baseScale={1}>
+          <ScrollStack 
+            useWindowScroll={true} 
+            itemDistance={isMobile ? 40 : 60} 
+            itemStackDistance={isMobile ? 12 : 15} 
+            stackPosition={isMobile ? "20%" : "40%"} 
+            baseScale={1}
+          >
             {services.map((s, i) => (
             <ScrollStackItem key={i} itemClassName={`theme-${i} focused`}>
               <div className="service-card" style={{ height: '100%', margin: 0 }}>
