@@ -306,7 +306,7 @@ function Services() {
         </div>
         
         <div style={{ position: 'relative', zIndex: 1 }}>
-          <ScrollStack useWindowScroll={true} itemDistance={60} itemStackDistance={25} stackPosition="30%" baseScale={0.9}>
+          <ScrollStack useWindowScroll={true} itemDistance={60} itemStackDistance={15} stackPosition="40%" baseScale={1}>
             {services.map((s, i) => (
             <ScrollStackItem key={i} itemClassName={`theme-${i} focused`}>
               <div className="service-card" style={{ height: '100%', margin: 0 }}>
