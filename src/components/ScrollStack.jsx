@@ -82,23 +82,17 @@ const ScrollStack = ({
     const stackPositionPx = parsePercentage(stackPosition, containerHeight);
     const scaleEndPositionPx = parsePercentage(scaleEndPosition, containerHeight);
 
+    const maxStackOffset = itemStackDistance * (cardsRef.current.length - 1);
+    const lastCardIndex = cardsRef.current.length - 1;
+
     const scrollerAbsoluteTop = scrollerRef.current 
       ? scrollerRef.current.getBoundingClientRect().top + window.scrollY 
       : 0;
 
-    const innerElement = scrollerRef.current?.querySelector('.scroll-stack-inner');
-    const nextSectionTop = innerElement 
-      ? innerElement.getBoundingClientRect().bottom + window.scrollY 
-      : scrollerAbsoluteTop + 2000; // Fallback
-
-    const maxStackOffset = itemStackDistance * (cardsRef.current.length - 1);
+    const lastCardTop = scrollerAbsoluteTop + originalOffsetsRef.current[lastCardIndex];
     
-    // We need the height of the last card to know where the stack's physical bottom is
-    const lastCard = cardsRef.current[cardsRef.current.length - 1];
-    const cardHeight = lastCard ? lastCard.offsetHeight : 320;
-    
-    // Unpin EXACTLY when the next section touches the bottom of the full stack
-    const pinEnd = nextSectionTop - stackPositionPx - maxStackOffset - cardHeight;
+    // Unpin exactly when the last card finishes its stacking animation
+    const pinEnd = lastCardTop - stackPositionPx - maxStackOffset;
 
     cardsRef.current.forEach((card, i) => {
       if (!card) return;

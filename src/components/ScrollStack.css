@@ -6,7 +6,7 @@
 }
 
 .scroll-stack-inner {
-  padding: 10px 0 30vh;
+  padding: 10px 0 0;
   /* Padding provides the scroll duration for the animation */
   min-height: 100%;
 }
