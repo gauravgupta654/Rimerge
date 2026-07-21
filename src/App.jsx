@@ -110,9 +110,9 @@ function StatCounter({ target, label }) {
 function Stats() {
   return (
     <div className="stats-bar">
-      <StatCounter target={25} label="Projects Delivered" />
-      <StatCounter target={15} label="Happy Clients" />
-      <StatCounter target={10} label="Team Members" />
+      <StatCounter target={10} label="Projects Delivered" />
+      <StatCounter target={7} label="Happy Clients" />
+      <StatCounter target={5} label="Team Members" />
       <StatCounter target={3} label="Years Experience" />
     </div>
   )
