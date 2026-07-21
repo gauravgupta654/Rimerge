@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
-
+import Hyperspeed from './components/Hyperspeed'
+import ScrollStack, { ScrollStackItem } from './components/ScrollStack'
 /* ══════════════════════ NAVBAR ══════════════════════ */
 function Navbar() {
   const [scrolled, setScrolled] = useState(false)
@@ -18,7 +19,10 @@ function Navbar() {
 
   return (
     <nav className={`navbar ${scrolled ? 'scrolled' : ''}`}>
-      <a href="#" className="logo">RI <span>MERGE</span></a>
+      <a href="#" style={{ display: 'flex', alignItems: 'center', gap: '12px', textDecoration: 'none' }}>
+        <img src="/logos/owl-logo.png" alt="Electric Owl Logo" style={{ height: '40px' }} />
+        <span className="logo">RI <span>MERGE</span></span>
+      </a>
       <div className={`nav-links ${menuOpen ? 'open' : ''}`}>
         <a onClick={() => scrollTo('about')}>About</a>
         <a onClick={() => scrollTo('services')}>Services</a>
@@ -38,8 +42,8 @@ function Hero() {
   const scrollTo = (id) => document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' })
   return (
     <section className="hero" id="hero">
-      <div className="hero-bg-image">
-        <img src="/logos/ri-3d-logo.png" alt="RI MERGE Logo" />
+      <div className="hero-bg-image" style={{ opacity: 0.35, zIndex: 0 }}>
+        <img src="/logos/owl-logo.png" alt="Owl Background" style={{ filter: 'drop-shadow(0 0 50px var(--accent))' }} />
       </div>
       <div className="hero-bg-orb orb-1" />
       <div className="hero-bg-orb orb-2" />
@@ -216,6 +220,7 @@ function TypoShowcase() {
   return (
     <div className="typo-outer" ref={containerRef}>
       <div className="typo-sticky">
+        <Hyperspeed />
         <div className="typo-grid-bg" />
 
         {/* Progress bar */}
@@ -281,82 +286,8 @@ const services = [
 ]
 
 function Services() {
-  const scrollRef = useRef(null)
-  const cardsRef = useRef([])
-
-  useEffect(() => {
-    const el = scrollRef.current
-    if (!el) return
-    let ticking = false
-
-    const updateCards = () => {
-      const el = scrollRef.current
-      if (!el) return
-      
-      const scrollLeft = el.scrollLeft
-      const viewportWidth = el.clientWidth
-      
-      // Fixed width assumptions to avoid layout thrashing
-      const isMobile = window.innerWidth <= 768
-      const cardWidth = isMobile ? 220 : 320
-      const gap = 30 // Approximate gap
-
-      cardsRef.current.forEach((card, i) => {
-        if (!card) return
-        
-        // Calculate distance relative to scroll center without reading from DOM
-        const cardPos = (viewportWidth / 2) + (i * (cardWidth + gap)) - scrollLeft
-        const dist = cardPos - (viewportWidth / 2)
-        
-        const isMobile = window.innerWidth <= 768
-        const maxDist = viewportWidth / 1.5
-        let normalizedDist = dist / maxDist
-        normalizedDist = Math.max(-1, Math.min(1, normalizedDist))
-        
-        if (isMobile) {
-          // Flat transitions for mobile to ensure maximum speed on Android
-          card.style.transform = `scale(${1 - Math.abs(normalizedDist) * 0.1})`
-          card.style.opacity = Math.max(0.4, 1 - Math.abs(normalizedDist) * 0.5).toFixed(2)
-        } else {
-          const rotateY = normalizedDist * -35 
-          const translateZ = Math.abs(normalizedDist) * -200
-          const translateX = normalizedDist * -50 
-          const scale = 1 - Math.abs(normalizedDist) * 0.15
-          const opacity = 1 - Math.abs(normalizedDist) * 0.6
-          
-          card.style.transform = `translate3d(${translateX}px, 0, ${translateZ}px) rotateY(${rotateY}deg) scale(${scale})`
-          card.style.opacity = Math.max(0, opacity).toFixed(2)
-        }
-        
-        if (Math.abs(normalizedDist) < 0.2) {
-          card.classList.add('focused')
-        } else {
-          card.classList.remove('focused')
-        }
-      })
-      ticking = false
-    }
-
-    const onScroll = () => {
-      if (!ticking) {
-        requestAnimationFrame(updateCards)
-        ticking = true
-      }
-    }
-
-    el.addEventListener('scroll', onScroll, { passive: true })
-    window.addEventListener('resize', onScroll)
-    updateCards()
-    setTimeout(updateCards, 100) // Safety trigger after initial layout
-    
-    return () => {
-      el.removeEventListener('scroll', onScroll)
-      window.removeEventListener('resize', onScroll)
-    }
-  }, [])
-
   return (
-    <section className="section section-alt" id="services" style={{ position: 'relative' }}>
+    <section className="section section-alt" id="services" style={{ position: 'relative', overflow: 'clip' }}>
       <div className="services-corner-glows" />
       <Reveal>
         <div className="section-header">
@@ -366,27 +297,28 @@ function Services() {
         </div>
       </Reveal>
       
-      <div className="services-carousel-container">
-        <div className="services-carousel-scroll" ref={scrollRef}>
-          <div className="services-carousel-spacer" />
-          
-          {services.map((s, i) => (
-            <div 
-              key={i} 
-              className="service-carousel-item"
-              ref={el => cardsRef.current[i] = el}
-            >
-              <div className="service-card">
+      <div style={{ marginTop: '45vh', position: 'relative' }}>
+        <div style={{ position: 'sticky', top: '50%', transform: 'translateY(-50%)', zIndex: 0, display: 'flex', justifyContent: 'center', pointerEvents: 'none', height: 0, overflow: 'visible', alignItems: 'center' }}>
+          <div className="scroll-stack-bg-text">
+            <div>ALL ON</div>
+            <div>RIMERGE</div>
+          </div>
+        </div>
+        
+        <div style={{ position: 'relative', zIndex: 1 }}>
+          <ScrollStack useWindowScroll={true} itemDistance={60} itemStackDistance={25} stackPosition="30%" baseScale={0.9}>
+            {services.map((s, i) => (
+            <ScrollStackItem key={i} itemClassName={`theme-${i} focused`}>
+              <div className="service-card" style={{ height: '100%', margin: 0 }}>
                 <div className="service-card-bg" />
                 <div className="service-number">0{i + 1}</div>
                 <div className="service-icon">{s.icon}</div>
-                <h3>{s.title}</h3>
+                <h3 style={{ marginTop: 'auto' }}>{s.title}</h3>
                 <p>{s.desc}</p>
               </div>
-            </div>
+            </ScrollStackItem>
           ))}
-          
-          <div className="services-carousel-spacer" />
+          </ScrollStack>
         </div>
       </div>
     </section>
@@ -395,9 +327,9 @@ function Services() {
 
 /* ══════════════════════ ABOUT ══════════════════════ */
 const aboutCards = [
-  { icon: '🎯', title: 'Our Mission', desc: 'To empower businesses with innovative technology solutions that drive growth, efficiency, and meaningful user engagement.', accent: 'purple' },
-  { icon: '🚀', title: 'Our Vision', desc: 'To become a leading digital innovation studio recognized for delivering world-class products with integrity and excellence.', accent: 'teal' },
-  { icon: '💡', title: 'Our Values', desc: 'Innovation, transparency, collaboration, and relentless pursuit of quality define everything we do at RI MERGE.', accent: 'pink' },
+  { icon: '🎯', title: 'Our Mission', desc: 'To empower businesses with innovative technology solutions that drive growth, efficiency, and meaningful user engagement.', accent: 'gold1' },
+  { icon: '🚀', title: 'Our Vision', desc: 'To become a leading digital innovation studio recognized for delivering world-class products with integrity and excellence.', accent: 'gold2' },
+  { icon: '💡', title: 'Our Values', desc: 'Innovation, transparency, collaboration, and relentless pursuit of quality define everything we do at RI MERGE.', accent: 'gold3' },
 ]
 
 function About() {
@@ -448,7 +380,7 @@ const projects = [
     action: 'coming-soon',
   },
   {
-    img: '/logos/vibexpert-online.png',
+    img: '/logos/vibexpert-online.jpg',
     tag: 'Web Platform', title: 'VibExpert Online',
     desc: 'A dynamic online platform offering digital services, tools, and resources for businesses and creators.',
     tech: ['React', 'Node.js', 'MongoDB', 'REST API'],
@@ -722,7 +654,6 @@ function ContactSection() {
               <div className="flip-card-front" onClick={() => setIsProjectFlipped(true)}>
                 <div className="card-watermark">HIRE US</div>
                 <div className="ri-logo-group">
-                  <span className="ri-box-text">RI MERGE</span>
                   <div className="ri-neon-logo">
                     <span className="ri-neon-text">RI</span>
                   </div>
@@ -800,7 +731,6 @@ function ContactSection() {
               <div className="flip-card-front" onClick={() => setIsInternFlipped(true)}>
                 <div className="card-watermark">APPLY</div>
                 <div className="ri-logo-group">
-                  <span className="ri-box-text">RI MERGE</span>
                   <div className="ri-neon-logo">
                     <span className="ri-neon-text">RI</span>
                   </div>
